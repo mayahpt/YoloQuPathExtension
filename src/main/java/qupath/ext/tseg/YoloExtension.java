@@ -39,13 +39,13 @@ public class YoloExtension implements QuPathExtension, GitHubProject {
 			"defaultPath", null);
 
 	public static final IntegerProperty tileSizeProperty = PathPrefs.createPersistentPreference(
-			"tileSize", 640);
+			"tileSize", 512);
 
 	public static final DoubleProperty downsampleProperty = PathPrefs.createPersistentPreference(
-			"downsample", 3.0);
+			"downsample", 1.0);
 
 	public static final DoubleProperty overlapProperty = PathPrefs.createPersistentPreference(
-			"overlap", 0.3);
+			"overlap", 0.25);
 
 	public static final StringProperty imageExtProperty = PathPrefs.createPersistentPreference(
 			"imgExtension", "png");
