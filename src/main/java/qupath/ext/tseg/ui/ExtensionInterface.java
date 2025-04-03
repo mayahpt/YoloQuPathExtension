@@ -1,11 +1,10 @@
+// Updated ExtensionInterface.java based on original + new UI field integration
+
 package qupath.ext.tseg.ui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
@@ -19,18 +18,19 @@ import java.util.ResourceBundle;
 public class ExtensionInterface extends GridPane {
 
     private static final ResourceBundle resources = ResourceBundle.getBundle("qupath.ext.tseg.ui.strings");
-    @FXML
-    private TextField pyScriptDirField;
-    @FXML
-    private Slider confSlider;
-    @FXML
-    private Slider iouSlider;
-    @FXML
-    private Text infoText;
-    @FXML
-    private Button runButton;
-    @FXML
-    private TextArea scriptOutput;
+
+    @FXML private TextField pyScriptDirField;
+    @FXML private Slider confSlider;
+    @FXML private Slider iouSlider;
+    @FXML private Text infoText;
+    @FXML private Button runButton;
+    @FXML private TextArea scriptOutput;
+
+    // New user-editable parameters
+    @FXML private TextField tileSizeField;
+    @FXML private TextField downsampleField;
+    @FXML private Slider overlapSlider;
+    @FXML private TextField imageExtField;
 
     public static ExtensionInterface createInstance() throws IOException {
         return new ExtensionInterface();
@@ -44,9 +44,18 @@ public class ExtensionInterface extends GridPane {
         loader.setController(this);
         loader.load();
         loadSavedDirectoryPath();
+        initializeValues();
     }
 
-    // Set path field according to directory chooser.
+    private void initializeValues() {
+        tileSizeField.setText(String.valueOf(YoloExtension.tileSizeProperty.get()));
+        downsampleField.setText(String.valueOf(YoloExtension.downsampleProperty.get()));
+        overlapSlider.setValue(YoloExtension.overlapProperty.get());
+        imageExtField.setText(YoloExtension.imageExtProperty.get());
+        confSlider.setValue(0.5); // Optional default
+        iouSlider.setValue(0.5);  // Optional default
+    }
+
     @FXML
     private void selectScriptDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -59,7 +68,6 @@ public class ExtensionInterface extends GridPane {
         }
     }
 
-    // Load script directory path from QuPath preferences.
     private void loadSavedDirectoryPath() {
         String savedPath = YoloExtension.defaultPathProperty.getValue();
         if (savedPath != null) {
@@ -67,18 +75,29 @@ public class ExtensionInterface extends GridPane {
         }
     }
 
-    // Run Python script through Java using a helper class upon clicking run button.
     @FXML
     private void runScript() {
         runButton.setDisable(true);
         scriptOutput.clear();
         scriptOutput.appendText(resources.getString("run.running") + "\n");
+
+        // Save user input
+        try {
+            YoloExtension.tileSizeProperty.set(Integer.parseInt(tileSizeField.getText()));
+            YoloExtension.downsampleProperty.set(Double.parseDouble(downsampleField.getText()));
+            YoloExtension.overlapProperty.set(overlapSlider.getValue());
+            YoloExtension.imageExtProperty.set(imageExtField.getText());
+        } catch (NumberFormatException e) {
+            scriptOutput.appendText("Invalid input in one of the fields.\n");
+            runButton.setDisable(false);
+            return;
+        }
+
         String pyScriptDirPath = pyScriptDirField.getText();
         PathConfig pathConfig = new PathConfig(pyScriptDirPath);
         double confidence = confSlider.getValue();
         double iou = iouSlider.getValue();
 
-        // Initialize QuPath I/O helper class.
         QPImage QPImage = new QPImage();
         if (QPImage.getROI() == null) {
             scriptOutput.appendText(resources.getString("run.no_roi") + "\n");
@@ -86,7 +105,6 @@ public class ExtensionInterface extends GridPane {
             return;
         }
 
-        // Run Python script.
         ScriptManager scriptManager = new ScriptManager(pathConfig, QPImage, confidence, iou, scriptOutput);
         scriptManager.setOnSucceeded(event -> {
             scriptOutput.appendText(resources.getString("run.done") + "\n");
@@ -103,5 +121,4 @@ public class ExtensionInterface extends GridPane {
         Thread thread = new Thread(scriptManager);
         thread.start();
     }
-
-}
+} 
