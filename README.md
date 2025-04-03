@@ -14,7 +14,7 @@ Project Repositories:
 Enables tumor segmentation with YOLO-seg models through a Python inference script, managing input/output by sending ROI and receiving predictions in GeoJSON format for integration with QuPath.
 
 <p align="center">
-  <img src="interface.jpg" width=450>
+  <img src="YoloQuPathExtension/interface.png" width=450>
 </p>
 
 ### Installation
