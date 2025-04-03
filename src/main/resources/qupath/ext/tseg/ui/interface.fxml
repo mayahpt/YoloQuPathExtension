@@ -3,33 +3,57 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root type="GridPane" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" hgap="15" vgap="15" prefWidth="560" prefHeight="540">
+<fx:root type="GridPane" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" hgap="15" vgap="15" prefWidth="560" prefHeight="600">
     <columnConstraints>
-        <ColumnConstraints prefWidth="110"/>
-        <ColumnConstraints prefWidth="280"/>
-        <ColumnConstraints prefWidth="110"/>
+        <ColumnConstraints prefWidth="110" />
+        <ColumnConstraints prefWidth="280" />
+        <ColumnConstraints prefWidth="110" />
     </columnConstraints>
 
     <rowConstraints>
-        <RowConstraints prefHeight="50"/>
-        <RowConstraints prefHeight="50"/>
-        <RowConstraints prefHeight="50"/>
-        <RowConstraints prefHeight="50"/>
-        <RowConstraints prefHeight="250"/>
+        <RowConstraints prefHeight="40" /> <!-- Script dir -->
+        <RowConstraints prefHeight="40" /> <!-- Confidence -->
+        <RowConstraints prefHeight="40" /> <!-- IoU -->
+        <RowConstraints prefHeight="40" /> <!-- Tile size -->
+        <RowConstraints prefHeight="40" /> <!-- Downsample -->
+        <RowConstraints prefHeight="40" /> <!-- Overlap -->
+        <RowConstraints prefHeight="40" /> <!-- Image Extension -->
+        <RowConstraints prefHeight="50" /> <!-- Run Button -->
+        <RowConstraints prefHeight="250" vgrow="ALWAYS" /> <!-- Output -->
     </rowConstraints>
 
-    <Label text="Script Directory:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
-    <TextField fx:id="pyScriptDirField" promptText="Python Script Directory" style="-fx-font-size: 12px; -fx-font-family: Consolas; -fx-font-style: italic;" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="300" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-    <Button onMouseClicked="#selectScriptDirectory" text=" 📁 " GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+    <!-- Script Directory -->
+    <Label text="Script Directory:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
+    <TextField fx:id="pyScriptDirField" promptText="Python Script Directory" style="-fx-font-size: 12px; -fx-font-family: Consolas; -fx-font-style: italic;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+    <Button onMouseClicked="#selectScriptDirectory" text="📁" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 
-    <Label text="Confidence:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
-    <Slider fx:id="confSlider" max="1.0" value="0.25" showTickMarks="true" showTickLabels="true" majorTickUnit="0.05" minorTickCount="0" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+    <!-- Confidence -->
+    <Label text="Confidence:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT" />
+    <Slider fx:id="confSlider" max="1.0" value="0.25" showTickMarks="true" showTickLabels="true" majorTickUnit="0.05" minorTickCount="0" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-    <Label text="IoU:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
-    <Slider fx:id="iouSlider" max="1.0" value="0.7" showTickMarks="true" showTickLabels="true" majorTickUnit="0.05" minorTickCount="0" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+    <!-- IoU -->
+    <Label text="IoU:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="RIGHT" />
+    <Slider fx:id="iouSlider" max="1.0" value="0.7" showTickMarks="true" showTickLabels="true" majorTickUnit="0.05" minorTickCount="0" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-    <Button fx:id="runButton" text="  Segment Selected Region  " onMouseClicked="#runScript" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+    <!-- Tile Size -->
+    <Label text="Tile Size:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="RIGHT" />
+    <TextField fx:id="tileSizeField" promptText="e.g. 512" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-    <TextArea fx:id="scriptOutput" editable="false" wrapText="true" style="-fx-font-size: 11px; -fx-font-family: Consolas;" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+    <!-- Downsample -->
+    <Label text="Downsample:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.halignment="RIGHT" />
+    <TextField fx:id="downsampleField" promptText="e.g. 1.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
+    <!-- Overlap -->
+    <Label text="Overlap:" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.halignment="RIGHT" />
+    <Slider fx:id="overlapSlider" min="0.0" max="1.0" majorTickUnit="0.1" showTickMarks="true" showTickLabels="true" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+    <!-- Image Extension -->
+    <Label text="Image Extension:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.halignment="RIGHT" />
+    <TextField fx:id="imageExtField" promptText=".png, .jpg" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+    <!-- Run Button -->
+    <Button fx:id="runButton" text="Segment Selected Region" onMouseClicked="#runScript" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.halignment="CENTER" />
+
+    <!-- Output -->
+    <TextArea fx:id="scriptOutput" editable="false" wrapText="true" style="-fx-font-size: 11px; -fx-font-family: Consolas;" GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.columnSpan="3" />
 </fx:root>
