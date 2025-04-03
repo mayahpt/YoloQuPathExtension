@@ -1,4 +1,4 @@
-# QuPath YOLO Tumor Segmentation Extension
+# QuPath YOLO Tumor Segmentation Extension - Fork
 
 **HU AIN Final Project**
 
